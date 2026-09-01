@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/* Configure Tailwind v4 dark variant to check for .dark class on <html>, not OS media query */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   PREMIUM E-SHOP DESIGN TOKENS
+   Font: Arial, "Helvetica Neue", Helvetica, sans-serif
+   ============================================================ */
+@theme {
+  --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-serif: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-montserrat: Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+  --shadow-custom: 0 4px 20px rgba(26, 26, 26, 0.04);
+  --shadow-right: 4px 0px 20px rgba(26, 26, 26, 0.04);
+  --shadow-premium: 0 4px 24px rgba(26, 26, 26, 0.05);
+  --shadow-premium-hover: 0 12px 32px rgba(26, 26, 26, 0.08);
+
+  /* Light Theme Tokens */
+  --color-premium-bg: #FAFAF9;
+  --color-premium-card: #FFFFFF;
+  --color-premium-charcoal: #1A1A1A;
+  --color-premium-charcoal-light: #2A2A2A;
+  --color-premium-gold: #C9A961;
+  --color-premium-gold-light: #DFCA95;
+  --color-premium-text: #1A1A1A;
+  --color-premium-muted: #6B6B6B;
+  --color-premium-border: #E8E6E3;
+  --color-image-bg: #F4F3EF;
+
+  --color-custom-blue: #1A1A1A;
+
+  --color-banner-color1: #FAFAF9;
+  --color-banner-color2: #FAFAF9;
+  --color-banner-color3: #FAFAF9;
+  --color-banner-color4: #FAFAF9;
+
+  --background-image-custom-gradient: linear-gradient(
+    to right,
+    #1A1A1A,
+    #2A2A2A
+  );
+  --background-image-button-gradient: linear-gradient(
+    to right,
+    #1A1A1A,
+    #2A2A2A
+  );
+  --background-image-custom-gradient2: linear-gradient(
+    135deg,
+    #FAFAF9,
+    #F7F6F4
+  );
+}
+
+/* ============================================================
+   DARK THEME OVERRIDES (Applied when class="dark" is set on <html>)
+   ============================================================ */
+.dark, [data-theme="dark"] {
+  --color-premium-bg: #0E0E10;
+  --color-premium-card: #16161A;
+  --color-premium-text: #F5F4F0;
+  --color-premium-charcoal: #F5F4F0;
+  --color-premium-charcoal-light: #E0DFDA;
+  --color-premium-muted: #9E9D97;
+  --color-premium-border: #26262C;
+  --color-image-bg: #1E1E24;
+
+  --color-premium-gold: #C9A961;
+  --color-premium-gold-light: #DFCA95;
+
+  --shadow-premium: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-premium-hover: 0 12px 32px rgba(0, 0, 0, 0.6);
+
+  --color-banner-color1: #0E0E10;
+  --color-banner-color2: #0E0E10;
+  --color-banner-color3: #0E0E10;
+  --color-banner-color4: #0E0E10;
+  --background-image-custom-gradient: linear-gradient(to right, #16161A, #222228);
+  --background-image-custom-gradient2: linear-gradient(135deg, #0E0E10, #16161A);
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+@layer base {
+  *, *::before, *::after {
+    transition-property: background-color, color, border-color, box-shadow, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+
+  body {
+    background-color: var(--color-premium-bg);
+    color: var(--color-premium-text);
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: #C9A961;
+    color: #1A1A1A;
+  }
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-premium-border, currentcolor);
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-premium-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D5D3CF;
+    border-radius: 9999px;
+  }
+
+  .dark ::-webkit-scrollbar-thumb, [data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #3A3A42;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #B0ADA8;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover, [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #4A4A54;
+  }
+}
+
+/* ============================================================
+   KEYFRAMES & UTILITIES
+   ============================================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+@layer utilities {
+  .animate-fadeIn {
+    animation: fadeIn 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--color-premium-border) 25%,
+      #F4F3EF 50%,
+      var(--color-premium-border) 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  .dark .skeleton-shimmer, [data-theme="dark"] .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      #26262C 25%,
+      #32323A 50%,
+      #26262C 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+}
