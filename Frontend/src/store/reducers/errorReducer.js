@@ -1,16 +1,17 @@
-const intialState = {
+const initialState = {
   isLoading: false,
   errorMessage: null,
-  categoryLoader : false,
-  categoryError : null,
+  categoryLoader: false,
+  categoryError: null,
 };
 
-export const errorReducer = (state = intialState, action) => {
+export const errorReducer = (state = initialState, action) => {
   switch (action.type) {
+    case "IS_FETCHING":
     case "IS_FETCHING_PRODUCTS": {
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
         errorMessage: null,
       };
     }
@@ -35,18 +36,18 @@ export const errorReducer = (state = intialState, action) => {
         categoryError: null,
       };
     }
+    case "CATEGORY_LOADER": {
+      return {
+        ...state,
+        categoryLoader: true,
+        categoryError: null,
+      };
+    }
     case "CATEGORY_ERROR": {
       return {
         ...state,
         categoryLoader: false,
         categoryError: action.payload,
-      };
-    }
-    case "IS_ERROR": {
-      return {
-        ...state,
-        categoryLoader: true,
-        categoryError: null,
       };
     }
     default:

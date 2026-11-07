@@ -4,6 +4,7 @@ const baseURL = import.meta.env.VITE_BACK_END_URL || 'http://localhost:5000';
 
 const api = axios.create({
   baseURL: `${baseURL}/api`,
+  withCredentials: true, // Include cookies in requests
 });
 
 // Add JWT token to every request

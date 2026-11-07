@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { 
-  MapPin, 
-  CreditCard, 
-  CheckCircle, 
-  Sparkles, 
-  ShoppingBag, 
+import {
+  MapPin,
+  CreditCard,
+  CheckCircle,
+  Sparkles,
+  ShoppingBag,
   ArrowLeft,
-  Lock,
-  ShieldCheck,
-  Check
+  Check,
 } from "lucide-react";
 import AddressInfo from "./AddressInfo";
 import PaymentMethod from "./PaymentMethod";
@@ -102,7 +100,7 @@ const Checkout = () => {
           <div className="relative flex items-center justify-between">
             {/* Connecting Track Line */}
             <div className="absolute left-0 top-5 sm:top-6 -translate-y-1/2 h-0.5 w-full bg-premium-border" />
-            <div 
+            <div
               className="absolute left-0 top-5 sm:top-6 -translate-y-1/2 h-0.5 bg-gradient-to-r from-premium-charcoal to-premium-gold transition-all duration-500"
               style={{ width: `${(activeStep / (steps.length - 1)) * 100}%` }}
             />
@@ -115,18 +113,18 @@ const Checkout = () => {
               const isClickable = activeStep > index && activeStep !== 3;
 
               return (
-                <div 
-                  key={step.id} 
-                  className={`relative z-10 flex flex-col items-center ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+                <div
+                  key={step.id}
+                  className={`relative z-10 flex flex-col items-center ${isClickable ? "cursor-pointer" : "cursor-default"}`}
                   onClick={() => isClickable && setActiveStep(index)}
                 >
-                  <div 
+                  <div
                     className={`flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border-2 transition-all duration-300 ${
                       isCompleted
                         ? "border-premium-charcoal bg-premium-charcoal text-premium-gold shadow-md"
                         : isActive
-                        ? "border-premium-gold bg-white text-premium-charcoal shadow-lg ring-4 ring-premium-gold/20 scale-105"
-                        : "border-premium-border bg-[#FAFAF9] text-premium-muted"
+                          ? "border-premium-gold bg-white text-premium-charcoal shadow-lg ring-4 ring-premium-gold/20 scale-105"
+                          : "border-premium-border bg-[#FAFAF9] text-premium-muted"
                     }`}
                   >
                     {isCompleted ? (
@@ -137,9 +135,11 @@ const Checkout = () => {
                   </div>
 
                   <div className="mt-2.5 text-center">
-                    <span 
+                    <span
                       className={`block text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-colors ${
-                        isActive || isCompleted ? "text-premium-charcoal" : "text-premium-muted"
+                        isActive || isCompleted
+                          ? "text-premium-charcoal"
+                          : "text-premium-muted"
                       }`}
                     >
                       {step.title}
@@ -164,21 +164,19 @@ const Checkout = () => {
             {/* Left: Step Form Content */}
             <div className="lg:col-span-7 xl:col-span-8 rounded-2xl border border-premium-border/80 bg-white p-6 sm:p-8 shadow-sm">
               {activeStep === 0 && (
-                <AddressInfo 
-                  onNext={() => setActiveStep(1)} 
-                />
+                <AddressInfo onNext={() => setActiveStep(1)} />
               )}
 
               {activeStep === 1 && (
-                <PaymentMethod 
-                  onNext={() => setActiveStep(2)} 
-                  onBack={() => setActiveStep(0)} 
+                <PaymentMethod
+                  onNext={() => setActiveStep(2)}
+                  onBack={() => setActiveStep(0)}
                 />
               )}
 
               {activeStep === 2 && (
-                <OrderReview 
-                  onBack={() => setActiveStep(1)} 
+                <OrderReview
+                  onBack={() => setActiveStep(1)}
                   onOrderPlaced={handleOrderPlaced}
                   appliedCoupon={appliedCoupon}
                   giftPackaging={giftPackaging}

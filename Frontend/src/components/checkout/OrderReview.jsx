@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MapPin,
@@ -9,31 +9,26 @@ import {
   ArrowLeft,
   Lock,
   Sparkles,
-  Check,
   FileText,
   Truck,
-  ShieldCheck,
 } from "lucide-react";
 import { formatPrice } from "../../utils/formatPrice";
 import toast from "react-hot-toast";
 import api from "../../api/api";
 
 const paymentLabels = {
+  Stripe: { label: "Credit / Debit Card", icon: CreditCard },
   card: { label: "Credit / Debit Card", icon: CreditCard },
   upi: { label: "UPI / Instant Pay", icon: Smartphone },
+  PayPal: { label: "PayPal", icon: Building },
   netbanking: { label: "Net Banking", icon: Building },
   cod: { label: "Cash on Delivery", icon: Banknote },
 };
 
-const OrderReview = ({
-  onBack,
-  onOrderPlaced,
-  appliedCoupon,
-  giftPackaging,
-}) => {
+const OrderReview = ({ onBack, onOrderPlaced, appliedCoupon }) => {
   const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.carts);
-  const { selectedUserCheckoutAddress, paymentMethod, user } = useSelector(
+  const { selectedUserCheckoutAddress, paymentMethod } = useSelector(
     (state) => state.auth,
   );
 
@@ -80,29 +75,11 @@ const OrderReview = ({
         pgResponseMessage: "Order Payment Processed Successfully",
       };
 
-      // Call Spring Boot Order Endpoint
-      let orderResponse = null;
-      try {
-        const response = await api.post(
-          `/order/users/payments/${endpointMethod}`,
-          orderPayload,
-        );
-        orderResponse = response.data;
-      } catch (err) {
-        console.warn("Backend order placement fallback:", err);
-        // In case backend cart was created locally, build synthetic order summary
-        orderResponse = {
-          orderId: Math.floor(100000 + Math.random() * 900000),
-          orderDate: new Date().toISOString().split("T")[0],
-          totalAmount: finalTotal,
-          orderStatus: "Order Accepted !",
-          payment: {
-            paymentMethod: paymentMethod,
-            pgPaymentId: generatedPaymentId,
-            pgStatus: "SUCCESS",
-          },
-        };
-      }
+      const response = await api.post(
+        `/order/users/payments/${endpointMethod}`,
+        orderPayload,
+      );
+      const orderResponse = response.data;
 
       // Clean local storage & Redux cart
       localStorage.removeItem("cartItems");

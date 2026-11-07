@@ -34,9 +34,6 @@ public class OrderServiceImpl implements OrderService {
     OrderItemRepository orderItemRepository;
 
     @Autowired
-    CartService cartService;
-
-    @Autowired
     ProductRepository productRepository;
 
     @Autowired
@@ -91,15 +88,16 @@ public class OrderServiceImpl implements OrderService {
         orderItems = orderItemRepository.saveAll(orderItems);
 
         // Update product stock
-        cart.getCartItems().forEach(item -> {
+        for (CartItem item : cartItems) {
             int quantity = item.getQuantity();
             Product product = item.getProduct();
             product.setQuantity(product.getQuantity() - quantity);
             productRepository.save(product);
+        }
 
-            // Clear the cart
-            cartService.deleteProductFromCart(cart.getCartId(), item.getProduct().getProductId());
-        });
+        cartItems.clear();
+        cart.setTotalPrice(0.0);
+        cartRepository.save(cart);
 
         // Send back the order summary
         OrderDTO orderDTO = modelMapper.map(savedOrder, OrderDTO.class);

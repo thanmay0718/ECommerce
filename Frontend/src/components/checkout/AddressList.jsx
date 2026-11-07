@@ -1,13 +1,13 @@
-import React from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserCheckoutAddress } from "../../store/actions";
 import {
-  Building2,
   MapPin,
   Globe,
   Check,
   Edit3,
   Trash2,
+  LoaderCircle,
   Home,
 } from "lucide-react";
 
@@ -19,6 +19,12 @@ const AddressList = ({
 }) => {
   const dispatch = useDispatch();
   const { selectedUserCheckoutAddress } = useSelector((state) => state.auth);
+  const [selectingAddressId, setSelectingAddressId] = useState(null);
+  const selectionTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => clearTimeout(selectionTimeoutRef.current);
+  }, []);
 
   const onEditButtonHandler = (e, address) => {
     e.stopPropagation();
@@ -33,7 +39,19 @@ const AddressList = ({
   };
 
   const handleAddressSelection = (address) => {
+    if (
+      selectingAddressId ||
+      selectedUserCheckoutAddress?.addressId === address.addressId
+    ) {
+      return;
+    }
+
+    setSelectingAddressId(address.addressId);
     dispatch(selectUserCheckoutAddress(address));
+    clearTimeout(selectionTimeoutRef.current);
+    selectionTimeoutRef.current = setTimeout(() => {
+      setSelectingAddressId(null);
+    }, 450);
   };
 
   return (
@@ -41,17 +59,31 @@ const AddressList = ({
       {addresses.map((address) => {
         const isSelected =
           selectedUserCheckoutAddress?.addressId === address.addressId;
+        const isSelecting = selectingAddressId === address.addressId;
 
         return (
           <div
             key={address.addressId}
             onClick={() => handleAddressSelection(address)}
+            aria-busy={isSelecting}
             className={`group relative flex flex-col justify-between rounded-2xl border p-5 transition-all duration-300 cursor-pointer ${
               isSelected
                 ? "border-premium-charcoal bg-premium-card ring-2 ring-premium-charcoal/10 shadow-lg shadow-black/[0.04]"
                 : "border-premium-border/80 bg-premium-card hover:border-premium-charcoal/40 hover:shadow-md"
             }`}
           >
+            {isSelecting && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 rounded-2xl bg-white/90 backdrop-blur-[2px] text-premium-charcoal">
+                <LoaderCircle
+                  size={22}
+                  className="animate-spin text-premium-gold"
+                />
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em]">
+                  Selecting delivery address
+                </span>
+              </div>
+            )}
+
             {/* Selected Gold Pill */}
             <div className="flex items-start justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">

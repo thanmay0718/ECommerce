@@ -1,6 +1,12 @@
 package com.ecommerce.sb_ecom.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -22,7 +28,7 @@ public class Payment {
     private Order order;
 
     @NotBlank
-    @Size(min = 4, message = "Payment method must contain at least 4 characters ")
+    @Size(min = 2, message = "Payment method must contain at least 2 characters ")
     private String paymentMethod;
 
     private String pgPaymentId;

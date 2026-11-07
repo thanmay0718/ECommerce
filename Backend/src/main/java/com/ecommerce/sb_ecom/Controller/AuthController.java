@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import com.ecommerce.sb_ecom.Model.AppRole;
 import com.ecommerce.sb_ecom.Model.Role;
 import com.ecommerce.sb_ecom.Model.User;
@@ -162,14 +163,20 @@ public class AuthController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<?> getUserDetails(Authentication authentication){
+    public ResponseEntity<?> getUserDetails(Authentication authentication, HttpServletRequest request){
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        String jwt = jwtUtils.getJwtFromHeader(request);
+        if (jwt == null) {
+            jwt = jwtUtils.getJwtFromCookies(request);
+        }
+
         UserInfoResponse response = new UserInfoResponse(
                 userDetails.getId(),
+                jwt,
                 userDetails.getUsername(),
                 roles);
 
